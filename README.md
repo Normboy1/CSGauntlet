@@ -6,14 +6,14 @@
 
 **The Ultimate Real-Time Competitive Programming Platform**
 
-[![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-success?style=flat-square)](https://github.com/yourusername/cs-gauntlet)
+[![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-success?style=flat-square)](https://github.com/Normboy1/CSGauntlet)
 [![Security Score](https://img.shields.io/badge/Security-95%2F100-brightgreen?style=flat-square)](./SECURITY.md)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](./LICENSE)
 [![React](https://img.shields.io/badge/React-18.2.0-61dafb?style=flat-square&logo=react)](https://reactjs.org/)
 [![Flask](https://img.shields.io/badge/Flask-2.3.3-000000?style=flat-square&logo=flask)](https://flask.palletsprojects.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-3178c6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 
-[🚀 Live Demo](https://cs-gauntlet.vercel.app) • [📖 Documentation](./docs/) • [🐛 Report Bug](https://github.com/yourusername/cs-gauntlet/issues) • [✨ Request Feature](https://github.com/yourusername/cs-gauntlet/issues)
+[🚀 Live Demo](https://cs-gauntlet.vercel.app) • [📖 Documentation](./docs/) • [🐛 Report Bug](https://github.com/Normboy1/CSGauntlet/issues) • [✨ Request Feature](https://github.com/Normboy1/CSGauntlet/issues)
 
 </div>
 
@@ -106,8 +106,8 @@ SQLite (Development) / PostgreSQL (Production)
 
 ### **One-Command Setup**
 ```bash
-git clone https://github.com/yourusername/cs-gauntlet.git
-cd cs-gauntlet
+git clone https://github.com/Normboy1/CSGauntlet.git
+cd CSGauntlet
 chmod +x start.sh
 ./start.sh
 ```
@@ -408,7 +408,7 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 Made with ❤️ by the CS Gauntlet Team
 
-[🚀 **Deploy Now**](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/cs-gauntlet) • [📱 **Try Demo**](https://cs-gauntlet.vercel.app) • [🤝 **Contribute**](./CONTRIBUTING.md)
+[🚀 **Deploy Now**](https://vercel.com/new/clone?repository-url=https://github.com/Normboy1/CSGauntlet) • [📱 **Try Demo**](https://cs-gauntlet.vercel.app) • [🤝 **Contribute**](./CONTRIBUTING.md)
 
 </div>
 
