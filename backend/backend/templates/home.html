@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}The CS Gauntlet{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4">CS Gauntlet</h1>
+                <p class="lead">The Ultimate College Programming Competition</p>
+                <p class="text-muted">Compete against students from your college and beyond</p>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">How It Works</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <i class="fas fa-graduation-cap fa-3x text-primary"></i>
+                                <h6 class="mt-2">College-Based</h6>
+                                <p class="text-muted">Compete with students from your college</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <i class="fas fa-trophy fa-3x text-primary"></i>
+                                <h6 class="mt-2">Ranked System</h6>
+                                <p class="text-muted">Climb the ranks and become the top coder</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <i class="fas fa-users fa-3x text-primary"></i>
+                                <h6 class="mt-2">Real-Time Battles</h6>
+                                <p class="text-muted">Code head-to-head with other students</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">College Rankings</h5>
+                            <div class="college-ranking-list">
+                                {% for college in top_colleges %}
+                                <div class="ranking-item mb-2">
+                                    <div class="ranking-number">{{ loop.index }}</div>
+                                    <div class="ranking-info">
+                                        <h6 class="mb-0">{{ college.name }}</h6>
+                                        <small class="text-muted">{{ college.score }} points</small>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Top College Students</h5>
+                            <div class="leaderboard-list">
+                                {% for user in top_students %}
+                                <div class="leaderboard-item mb-2">
+                                    <div class="ranking-number">{{ loop.index }}</div>
+                                    <div class="leaderboard-info">
+                                        <img src="{{ url_for('static', filename='avatars/' + user.avatar_url) }}" 
+                                             class="avatar-sm mr-2" alt="{{ user.username }}">
+                                        <h6 class="mb-0">{{ user.username }}</h6>
+                                        <small class="text-muted">{{ user.college_name }}</small>
+                                    </div>
+                                    <div class="leaderboard-score">
+                                        <span class="badge badge-primary">{{ user.score }}</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.matchmaking') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-gamepad mr-2"></i>Find a Match
+                </a>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Join the Competition
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .ranking-number {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+    }
+    
+    .leaderboard-item {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+    }
+    
+    .avatar-sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+    }
+    
+    .leaderboard-info {
+        flex: 1;
+    }
+    
+    .leaderboard-score {
+        text-align: right;
+    }
+</style>
+{% endblock %}

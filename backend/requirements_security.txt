@@ -1,0 +1,64 @@
+# Security Requirements for CS Gauntlet
+# These are additional security-focused dependencies
+
+# Input Validation and Sanitization
+bleach>=6.0.0                    # HTML sanitization
+wtforms>=3.0.0                   # Form validation
+email-validator>=2.0.0           # Email validation
+python-magic>=0.4.27             # File type detection
+Pillow>=10.0.0                   # Image processing and validation
+
+# Rate Limiting
+Flask-Limiter>=3.5.0             # Rate limiting for Flask
+redis>=4.6.0                     # Redis for distributed rate limiting
+
+# CORS Security
+Flask-CORS>=4.0.0                # CORS handling
+
+# Content Security Policy and Headers
+flask-talisman>=1.1.0            # Security headers (alternative to custom implementation)
+
+# Authentication and Authorization Security
+Flask-Login>=0.6.2               # User session management
+Flask-WTF>=1.1.1                 # CSRF protection
+cryptography>=41.0.0             # Modern cryptographic operations
+bcrypt>=4.0.1                    # Password hashing
+PyJWT>=2.8.0                     # JWT token handling
+
+# Audit Logging
+structlog>=23.1.0                # Structured logging (optional enhancement)
+
+# File Upload Security
+python-magic-bin>=0.4.14         # Binary for python-magic (Windows)
+secure-filename>=1.0.0           # Additional filename security
+
+# Code Execution Security
+docker>=6.1.0                    # Docker SDK for sandboxed execution
+psutil>=5.9.0                    # Process monitoring
+
+# Database Security
+SQLAlchemy>=2.0.0                # ORM with security features
+alembic>=1.11.0                  # Database migrations
+
+# Environment and Configuration Security
+python-dotenv>=1.0.0             # Environment variable loading
+click>=8.1.0                     # CLI commands
+
+# Monitoring and Metrics
+prometheus-client>=0.17.0        # Metrics collection (optional)
+
+# Development and Testing Security
+bandit>=1.7.5                    # Security linting
+safety>=2.3.0                    # Dependency vulnerability checking
+
+# Network Security
+requests>=2.31.0                 # Secure HTTP requests
+urllib3>=2.0.0                   # HTTP library with security fixes
+
+# Additional Security Utilities
+secrets                          # Secure random number generation (built-in)
+hashlib                          # Hashing functions (built-in)
+hmac                             # HMAC implementation (built-in)
+
+# Development Tools (install separately in dev)
+# pip install bandit safety pytest-security

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard - CS Gauntlet{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- College Rankings -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">College Rankings</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" type="button" id="collegeFilter" data-bs-toggle="dropdown">
+                            All Colleges
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="collegeFilter">
+                            <li><a class="dropdown-item" href="#">All Colleges</a></li>
+                            {% for college in colleges %}
+                            <li><a class="dropdown-item" href="#">{{ college.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>College</th>
+                                    <th>Points</th>
+                                    <th>Active Players</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for college in college_rankings %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>
+                                        <img src="{{ url_for('static', filename='colleges/' + college.logo) }}" 
+                                             class="college-logo me-2" alt="{{ college.name }}">
+                                        {{ college.name }}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ college.points }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">{{ college.active_players }}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Individual Rankings -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Top College Students</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" type="button" id="gameModeFilter" data-bs-toggle="dropdown">
+                            All Modes
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="gameModeFilter">
+                            <li><a class="dropdown-item" href="#">All Modes</a></li>
+                            <li><a class="dropdown-item" href="#">Casual</a></li>
+                            <li><a class="dropdown-item" href="#">Ranked</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Student</th>
+                                    <th>College</th>
+                                    <th>Points</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in user_rankings %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>
+                                        <img src="{{ url_for('static', filename='avatars/' + user.avatar_url) }}" 
+                                             class="avatar-sm me-2" alt="{{ user.username }}">
+                                        {{ user.username }}
+                                    </td>
+                                    <td>
+                                        <img src="{{ url_for('static', filename='colleges/' + user.college_logo) }}" 
+                                             class="college-logo me-2" alt="{{ user.college_name }}">
+                                        {{ user.college_name }}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ user.points }}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .college-logo {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+    }
+    
+    .avatar-sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.075);
+    }
+    
+    .dropdown-toggle::after {
+        margin-left: 0.5rem;
+    }
+    
+    .dropdown-menu {
+        min-width: 200px;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Matchmaking{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card slide-in">
+                <div class="card-body text-center">
+                    <h2 class="card-title mb-4 bounce-in">Matchmaking</h2>
+                    <div class="mb-4">
+                        <label class="form-label">Select Game Mode</label>
+                        <select class="form-select fade-in" id="gameMode">
+                            <option value="casual">Casual</option>
+                            <option value="ranked">Ranked</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Select Language</label>
+                        <select class="form-select fade-in" id="language">
+                            <option value="python">Python</option>
+                            <option value="java">Java</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="c">C</option>
+                            <option value="cpp">C++</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <button class="btn btn-primary btn-lg fade-in" id="findMatch">Find Match</button>
+                    </div>
+
+                    <div id="matchmakingStatus" class="mt-4">
+                        <div class="alert alert-info fade-in" id="statusMessage" style="display: none;"></div>
+                        <div class="progress fade-in" id="matchmakingProgress" style="display: none;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div id="matchFound" style="display: none;">
+                        <div class="alert alert-success fade-in">
+                            <h4 class="alert-heading">Match Found!</h4>
+                            <p>Your opponent is ready. Click "Start Game" to begin!</p>
+                            <button class="btn btn-success fade-in" id="startMatch">Start Game</button>
+                        </div>
+                    </div>
+
+                    <div id="matchFailed" style="display: none;">
+                        <div class="alert alert-warning fade-in">
+                            <h4 class="alert-heading">Match Failed</h4>
+                            <p>No suitable opponent found. Try again later!</p>
+                            <button class="btn btn-primary fade-in" id="retryMatch">Try Again</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let socket = io('http://localhost:5001', { transports: ['websocket'] });
+let currentMatch = null;
+
+socket.on('connect', () => {
+    console.log('Connected to server');
+});
+
+socket.on('match_found', (data) => {
+    currentMatch = data.match_id;
+    showMatchFound();
+});
+
+socket.on('match_failed', () => {
+    showMatchFailed();
+});
+
+socket.on('match_canceled', () => {
+    currentMatch = null;
+    showMatchFailed();
+});
+
+function showMatchmakingStatus(message) {
+    const statusMessage = document.getElementById('statusMessage');
+    statusMessage.textContent = message;
+    statusMessage.style.display = 'block';
+    
+    const progress = document.getElementById('matchmakingProgress');
+    progress.style.display = 'block';
+    
+    // Animate progress bar
+    const progressBar = progress.querySelector('.progress-bar');
+    progressBar.style.width = '0%';
+    progressBar.style.transition = 'none';
+    requestAnimationFrame(() => {
+        progressBar.style.transition = 'width 3s linear';
+        progressBar.style.width = '100%';
+    });
+}
+
+function showMatchFound() {
+    const matchmakingStatus = document.getElementById('matchmakingStatus');
+    const matchFound = document.getElementById('matchFound');
+    
+    matchmakingStatus.style.display = 'none';
+    matchFound.style.display = 'block';
+    
+    // Animate match found message
+    matchFound.style.opacity = '0';
+    requestAnimationFrame(() => {
+        matchFound.style.opacity = '1';
+    });
+}
+
+function showMatchFailed() {
+    const matchmakingStatus = document.getElementById('matchmakingStatus');
+    const matchFailed = document.getElementById('matchFailed');
+    
+    matchmakingStatus.style.display = 'none';
+    matchFailed.style.display = 'block';
+    
+    // Animate match failed message
+    matchFailed.style.opacity = '0';
+    requestAnimationFrame(() => {
+        matchFailed.style.opacity = '1';
+    });
+}
+
+function startMatchmaking() {
+    const gameMode = document.getElementById('gameMode').value;
+    const language = document.getElementById('language').value;
+    
+    socket.emit('find_match', {
+        game_mode: gameMode,
+        language: language
+    });
+    
+    showMatchmakingStatus('Searching for opponent...');
+}
+
+function startGame() {
+    if (currentMatch) {
+        socket.emit('start_match', { match_id: currentMatch });
+        window.location.href = '/game';
+    }
+}
+
+function retryMatch() {
+    currentMatch = null;
+    document.getElementById('matchFailed').style.display = 'none';
+    startMatchmaking();
+}
+
+// Event listeners
+document.getElementById('findMatch').addEventListener('click', startMatchmaking);
+document.getElementById('startMatch').addEventListener('click', startGame);
+document.getElementById('retryMatch').addEventListener('click', retryMatch);
+
+// Add hover effects to buttons
+const buttons = document.querySelectorAll('button');
+buttons.forEach(button => {
+    button.addEventListener('mouseenter', () => {
+        button.style.transform = 'scale(1.05)';
+    });
+    button.addEventListener('mouseleave', () => {
+        button.style.transform = 'scale(1)';
+    });
+});
+</script>
+{% endblock %}

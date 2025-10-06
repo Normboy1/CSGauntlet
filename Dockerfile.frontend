@@ -1,0 +1,14 @@
+# Frontend Dockerfile
+FROM node:18 AS build
+WORKDIR /app
+COPY frontend/package*.json ./frontend/
+COPY frontend ./frontend
+WORKDIR /app/frontend
+RUN npm install && npm run build
+
+FROM node:18-slim AS production
+WORKDIR /app
+RUN npm install -g serve
+COPY --from=build /app/frontend/build ./build
+EXPOSE 3000
+CMD ["serve", "-s", "build", "-l", "3000"] 

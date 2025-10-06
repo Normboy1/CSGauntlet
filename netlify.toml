@@ -1,0 +1,30 @@
+[build]
+  # Directory where the build system installs dependencies and runs your build
+  base = "/"
+  
+  # Directory that contains the deploy-ready files
+  publish = "frontend/dist"
+  
+  # Build command
+  command = "cd frontend && npm install && npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://cs-gauntlet-backend.herokuapp.com/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+  targetPort = 5173
+  publish = "frontend/dist"
+  autoLaunch = false

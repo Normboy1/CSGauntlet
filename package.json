@@ -1,0 +1,14 @@
+{
+  "name": "cs-gauntlet",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm install && npm run build",
+    "start": "cd backend && python run_enhanced.py",
+    "test": "python test_full_system.py"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

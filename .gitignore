@@ -1,0 +1,177 @@
+# =========================
+# Python & Flask
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.pyc
+.pytest_cache/
+
+# Flask specific
+instance/
+.webassets-cache
+*.db
+*.sqlite
+*.sqlite3
+backend/logs/
+backend/*.log
+backend/cs_gauntlet.db
+
+# =========================
+# Node & Frontend
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# React build files
+frontend/dist/
+frontend/build/
+next/
+out/
+
+# =========================
+# Environment & Secrets
+# =========================
+.env
+.env.*
+*.env
+!.env.example
+production.env
+secrets.json
+*.pem
+*.key
+*.crt
+*.pfx
+
+# =========================
+# IDE & Editor
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+.project
+.classpath
+.settings/
+*.sublime-*
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+*.lnk
+
+# =========================
+# Testing & Coverage
+# =========================
+coverage/
+.coverage
+htmlcov/
+.nyc_output
+.hypothesis/
+.pytest_cache/
+test-results/
+*.cover
+
+# =========================
+# Temporary Files
+# =========================
+*.log
+*.tmp
+*.temp
+*.cache
+tmp/
+temp/
+cache/
+
+# =========================
+# Deployment
+# =========================
+.vercel
+.netlify
+*.zip
+*.tar.gz
+windsurf_deployment.yaml
+
+# =========================
+# Documentation (Optional)
+# =========================
+# Uncomment if you want to exclude docs
+# docs/_build/
+# site/
+
+# =========================
+# Security & Backup
+# =========================
+cs-gauntlet Back up/
+backup/
+backups/
+*.backup
+*.old
+*~
+
+# =========================
+# Redis
+# =========================
+dump.rdb
+redis.log
+
+# =========================
+# Celery
+# =========================
+celerybeat-schedule
+celerybeat.pid
+celerybeat-schedule.db
+
+# =========================
+# Docker (optional)
+# =========================
+# Uncomment if you want to exclude docker files
+# Dockerfile*
+# docker-compose*.yml
+
+# =========================
+# Keep These Files
+# =========================
+!backend/requirements.txt
+!frontend/package.json
+!frontend/src/**
+!backend/backend/**/*.py
+!frontend/public/
+!*.md
+!docs/**
+!frontend/DESIGN_SYSTEM.md
+!frontend/STYLING_GUIDE.md
+!frontend/STYLING_README.md
+!netlify.toml
+!vercel.json
+!docker-compose.yml
+!Dockerfile
+!config.py
+!*.toml
+!*.json

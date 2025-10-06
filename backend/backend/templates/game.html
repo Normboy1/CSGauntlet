@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}The CS Gauntlet - Game{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Game Interface -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="game-container">
+                        <div class="game-header">
+                            <h3 class="mb-3">{{ game_mode.title() }} Mode - {{ language.title() }}</h3>
+                            <div class="game-controls">
+                                <button class="btn btn-primary" id="startGame">Start Game</button>
+                                <button class="btn btn-danger" id="leaveGame">Leave Game</button>
+                            </div>
+                        </div>
+                        
+                        <div class="game-content">
+                            <div class="challenge-box">
+                                <pre id="challengeText"></pre>
+                            </div>
+                            
+                            <div class="editor-container">
+                                <div id="editor"></div>
+                            </div>
+                            
+                            <div class="test-cases">
+                                <h5>Test Cases</h5>
+                                <div id="testCases"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Chat Interface -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Chat</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chat-messages" id="chatMessages" style="height: 400px; overflow-y: auto;"></div>
+                    <div class="chat-input mt-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="messageInput" placeholder="Type a message...">
+                            <button class="btn btn-primary" type="button" id="sendMessage">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Status -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="game-status">
+                        <div class="status-item">
+                            <h6>Opponent</h6>
+                            <div id="opponentStatus" class="status-indicator">
+                                <span class="status-dot"></span>
+                                <span id="opponentName">Waiting for opponent...</span>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <h6>Time Remaining</h6>
+                            <div id="timeRemaining">00:00</div>
+                        </div>
+                        <div class="status-item">
+                            <h6>Test Cases Passed</h6>
+                            <div id="testCasesPassed">0/0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .game-container {
+        height: 100%;
+    }
+
+    .game-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .game-content {
+        height: calc(100% - 80px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .challenge-box {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .editor-container {
+        flex: 1;
+        margin-bottom: 20px;
+    }
+
+    .test-cases {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .chat-messages {
+        padding: 15px;
+        border-radius: 8px;
+        background: #f8f9fa;
+    }
+
+    .chat-message {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .chat-message.sent {
+        background: #e3f2fd;
+        margin-left: 20%;
+    }
+
+    .chat-message.received {
+        background: #f5f5f5;
+        margin-right: 20%;
+    }
+
+    .chat-message .message-time {
+        font-size: 0.75rem;
+        color: #6c757d;
+    }
+
+    .chat-input {
+        position: relative;
+    }
+
+    .chat-input .form-control {
+        border-radius: 20px;
+        padding: 10px 40px 10px 15px;
+    }
+
+    .chat-input .btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        border-radius: 20px;
+    }
+
+    .status-item {
+        margin-bottom: 20px;
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #ccc;
+    }
+
+    .status-dot.online {
+        background: #28a745;
+    }
+</style>
+
+<script>
+    const socketUrl = "{{ config.SOCKET_URL }}";
+    let socket = io(socketUrl, { 
+        transports: ['websocket'],
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000
+    });
+    let editor = ace.edit("editor");
+    let currentGameId = null;
+
+    // Initialize editor
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/python");
+    editor.setOptions({
+        maxLines: 20,
+        minLines: 15,
+        fontSize: 14,
+        showPrintMargin: false
+    });
+
+    // Chat functionality
+    document.getElementById('sendMessage').addEventListener('click', sendMessage);
+    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    function sendMessage() {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value.trim();
+        
+        if (message && currentGameId) {
+            socket.emit('send_message', {
+                game_id: currentGameId,
+                message: message,
+                sender: '{{ current_user.username }}'
+            });
+            messageInput.value = '';
+        }
+    }
+
+    socket.on('receive_message', function(data) {
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${data.sender === '{{ current_user.username }}' ? 'sent' : 'received'}`;
+        
+        messageDiv.innerHTML = `
+            <div class="message-content">
+                <strong>${data.sender}:</strong> ${data.message}
+                <span class="message-time">${data.timestamp}</span>
+            </div>
+        `;
+        
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    });
+
+    // Game functionality
+    document.getElementById('startGame').addEventListener('click', function() {
+        socket.emit('find_match', {
+            game_mode: '{{ game_mode }}',
+            language: '{{ language }}'
+        });
+    });
+
+    document.getElementById('leaveGame').addEventListener('click', function() {
+        if (currentGameId) {
+            socket.emit('leave_game', { game_id: currentGameId });
+        }
+    });
+
+    socket.on('connect', function() {
+        console.log('Connected to server');
+    });
+
+    socket.on('game_found', function(data) {
+        currentGameId = data.game_id;
+        socket.emit('join_game', { game_id: currentGameId });
+        
+        document.getElementById('opponentName').textContent = data.opponent;
+        document.getElementById('opponentStatus').querySelector('.status-dot').classList.add('online');
+        
+        // Start game timer
+        let timeLeft = 180; // 3 minutes
+        const timer = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timeRemaining').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                socket.emit('game_over', { game_id: currentGameId });
+            }
+        }, 1000);
+    });
+
+    socket.on('game_over', function(data) {
+        if (data.winner) {
+            alert(`Game Over! ${data.winner} wins!`);
+        } else {
+            alert('Game Over! It was a tie!');
+        }
+        currentGameId = null;
+    });
+
+    socket.on('test_case_result', function(data) {
+        const testCasesPassed = document.getElementById('testCasesPassed');
+        testCasesPassed.textContent = `${data.passed}/${data.total}`;
+    });
+
+    socket.on('error', function(data) {
+        alert(data.message);
+    });
+</script>
+{% endblock %}

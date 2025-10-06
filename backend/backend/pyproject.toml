@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "whos_quicker"
+version = "1.0.0"
+description = "Competitive programming game with AI evaluation"
+requires-python = ">=3.9"
+dynamic = ["dependencies"]
+
+[project.urls]
+homepage = "https://github.com/yourusername/whos_quicker"
+
+[tool.setuptools]
+packages = ["backend"]
+include-package-data = true

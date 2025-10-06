@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <!-- Profile Photo Section -->
+                    <div class="profile-photo-container mb-4">
+                        <img src="{{ url_for('static', filename='uploads/profile_photos/' + user.profile_photo) }}"
+                             alt="Profile Photo"
+                             class="rounded-circle profile-photo mb-3"
+                             style="width: 150px; height: 150px; object-fit: cover;">
+                        <div class="upload-container">
+                            <label for="profilePhoto" class="btn btn-primary btn-sm mt-2">
+                                <i class="fas fa-camera"></i> Change Photo
+                            </label>
+                            <input type="file" id="profilePhoto" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+
+                    <!-- College Logo Section -->
+                    <div class="college-logo-container mb-4">
+                        <img src="{{ url_for('static', filename='uploads/college_logos/' + user.college_logo) }}"
+                             alt="College Logo"
+                             class="rounded college-logo mb-3"
+                             style="width: 120px; height: 120px; object-fit: contain;">
+                        <div class="upload-container">
+                            <label for="collegeLogo" class="btn btn-primary btn-sm mt-2">
+                                <i class="fas fa-university"></i> Change College Logo
+                            </label>
+                            <input type="file" id="collegeLogo" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+
+                    <h4>{{ user.username }}</h4>
+                    <p class="text-muted">Member since {{ user.created_at.strftime('%B %Y') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Account Information</h5>
+                    <form method="POST" action="{{ url_for('main.profile') }}" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.username.label(class="form-label") }}
+                                {{ form.username(class="form-control") }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.email.label(class="form-label") }}
+                                {{ form.email(class="form-control") }}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.college_name.label(class="form-label") }}
+                                {{ form.college_name(class="form-control") }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.github_username.label(class="form-label") }}
+                                {{ form.github_username(class="form-control") }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.bio.label(class="form-label") }}
+                            {{ form.bio(class="form-control", rows="3") }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-photo-container {
+        position: relative;
+    }
+
+    .profile-photo {
+        border: 3px solid #fff;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .college-logo-container {
+        position: relative;
+    }
+
+    .college-logo {
+        border: 2px solid #fff;
+        box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .upload-container {
+        position: relative;
+        margin-top: 10px;
+    }
+
+    .upload-container label {
+        cursor: pointer;
+    }
+
+    .upload-container input[type="file"] {
+        display: none;
+    }
+</style>
+
+<script>
+    document.getElementById('profilePhoto').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.profile-photo').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById('collegeLogo').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.college-logo').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+{% endblock %}
